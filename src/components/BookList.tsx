@@ -7,9 +7,10 @@ import { Book } from '../store/type';
 
 interface BookListProps {
   onEdit: (book: Book) => void;  
+  
 }
 
-const BookList: React.FC<BookListProps> = ({ onEdit }) => {
+const BookList: React.FC<BookListProps> = ({ onEdit  }) => {
   const books = useSelector((state: RootState) => state.books.books);
   const dispatch = useDispatch();
 

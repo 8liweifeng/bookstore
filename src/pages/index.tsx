@@ -1,11 +1,11 @@
 import type { NextPage } from 'next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { addBook } from '../store/booksSlice';
+import { addBook,deleteBook } from '../store/booksSlice';
 import BookList from '../components/BookList';
 import BookForm from '../components/BookForm';
 import { Book } from '../store/type'; 
-
+import { RootState } from '../store/store';
 
 interface Props {
   initialBooks: Book[];
@@ -17,12 +17,17 @@ const Home: NextPage<Props> = ({ initialBooks }) => {
   const [editingBook, setEditingBook] = useState<Book | null>(null); // Add this line
   const [showForm, setShowForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
+  const books = useSelector((state: RootState) => state.books.books);
   useEffect(() => {
-    initialBooks.forEach(book => {
-      dispatch(addBook(book));
+    
+    
+    if (books.length === 0) {
+      initialBooks.forEach(book => {
+        dispatch(addBook(book));
       });
-    }, [dispatch, initialBooks]);
+    }
+      
+  }, [dispatch, initialBooks]);
 
 
   const handleAddBook = () => {
@@ -43,6 +48,10 @@ const Home: NextPage<Props> = ({ initialBooks }) => {
     setEditingBook(null)
   };
 
+  // const handleDelete = (id: string) => {
+  //   dispatch(deleteBook(id));
+  // };
+
   return (
     <div className="container mx-auto px-4 mt-5">
       <h1 className="text-3xl font-bold text-center mb-4">Bookstore</h1>
@@ -56,7 +65,7 @@ const Home: NextPage<Props> = ({ initialBooks }) => {
         isEditing={isEditing}
       />
     )}
-     <BookList onEdit={handleEdit} />
+     <BookList onEdit={handleEdit}/>
     </div>
   );
 };
